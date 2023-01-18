@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -27,6 +28,8 @@ public class Car {
     private String color;
     @Column(name = "year")
     private String year;
+    @Column(name = "date_added")
+    private LocalDateTime dateAdded;
 
     @Override
     public boolean equals(Object o) {
