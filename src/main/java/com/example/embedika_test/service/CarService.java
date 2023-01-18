@@ -9,6 +9,10 @@ public interface CarService {
 
     Page<Car> getAllCars(Pageable pageable);
 
+    Page<Car> searchByText(String text, Pageable pageable);
+
+    Page<Car> searchByCarNumberAndRegionNumber(String carNumber, String regionNumber, Pageable pageable);
+
     Car findByCarId(Long carId);
 
     Car addCar(CarDto carDto);

@@ -36,19 +36,29 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car addCar(CarDto carDto) {
-        Region region = regionRepository.findByRegionNumber(carDto.getRegionNumber()).orElseThrow(() ->
-                new EntityNotFoundException("Регион " + carDto.getRegionNumber() + " не найден!"));
+    public Page<Car> searchByText(String text, Pageable pageable) {
+        return carRepository.searchByText(text, pageable);
+    }
 
-        if (carRepository.findByCarNumberAndRegion(carDto.getCarNumber(), region).isPresent()) {
+    @Override
+    public Page<Car> searchByCarNumberAndRegionNumber(String carNumber, String regionNumber, Pageable pageable) {
+        return carRepository.searchByCarNumberAndRegionNumber(carNumber, regionNumber, pageable);
+    }
+
+    @Override
+    public Car addCar(CarDto carDto) {
+
+        if (carRepository.existsByCarNumberAndRegionNumber(carDto.getCarNumber(), carDto.getRegionNumber())) {
             throw new EntityExistsException("Автомобиль с регистрационным знаком \""
-                    + carDto.getCarNumber() + region.getRegionNumber() + "\" уже существует!");
+                    + carDto.getCarNumber() + carDto.getRegionNumber() + "\" уже существует!");
         }
         return carRepository.save(new Car(
                 carDto.getCarNumber(),
                 carDto.getColor(),
                 carDto.getYear(),
-                region,
+
+                regionRepository.findByRegionNumber(carDto.getRegionNumber()).orElseThrow(() ->
+                        new EntityNotFoundException("Регион " + carDto.getRegionNumber() + " не найден!")),
 
                 carModelRepository.findByName(carDto.getCarModelName()).orElseThrow(() ->
                         new EntityNotFoundException("Модель автомобиля \"" + carDto.getCarModelName() + "\" не найдена!"))
