@@ -25,6 +25,8 @@ public class Car {
     private String color;
     @Column(name = "year")
     private String year;
+    @Column(name = "amountOfOwners")
+    private Byte amountOfOwners;
     @Column(name = "date_added")
     private LocalDateTime dateAdded = LocalDateTime.now();
 

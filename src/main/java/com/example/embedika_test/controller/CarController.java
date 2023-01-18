@@ -31,17 +31,31 @@ public class CarController {
         return ResponseEntity.ok().body(carService.getAllCars(pageable).getContent());
     }
 
+    @GetMapping("/all/sort-by-year")
+    public ResponseEntity<?> getAllCarsSortByYear(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                  @RequestParam(value = "size", required = false, defaultValue = "2") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("year").descending());
+        return ResponseEntity.ok().body(carService.getAllCars(pageable).getContent());
+    }
+
+    @GetMapping("/all/sort-by-amount-of-owners")
+    public ResponseEntity<?> getAllCarsSortByAmountOfOwners(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                        @RequestParam(value = "size", required = false, defaultValue = "2") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("amountOfOwners").ascending());
+        return ResponseEntity.ok().body(carService.getAllCars(pageable).getContent());
+    }
+
     @GetMapping("/other-info")
     public ResponseEntity<?> getOtherInfo() {
         return ResponseEntity.ok().body(
                 new OtherInfo(
-                carModelRepository.findAll().stream()
-                        .sorted((m1, m2) -> m1.getName().compareToIgnoreCase(m2.getName()))
-                        .collect(Collectors.toList()),
-                regionRepository.findAll().stream()
-                        .sorted((r1, r2) -> r1.getRegionNumber().compareToIgnoreCase(r2.getRegionNumber()))
-                        .collect(Collectors.toList())
-        ));
+                        carModelRepository.findAll().stream()
+                                .sorted((m1, m2) -> m1.getName().compareToIgnoreCase(m2.getName()))
+                                .collect(Collectors.toList()),
+                        regionRepository.findAll().stream()
+                                .sorted((r1, r2) -> r1.getRegionNumber().compareToIgnoreCase(r2.getRegionNumber()))
+                                .collect(Collectors.toList())
+                ));
     }
 
     @PostMapping("/add")
