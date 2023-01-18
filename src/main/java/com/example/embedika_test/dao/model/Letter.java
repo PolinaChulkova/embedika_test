@@ -17,7 +17,7 @@ public class Letter {
     @Id
     @GeneratedValue
     @Column(name = "letter_id")
-    private Long letterId;
+    private Short letterId;
     @Column(name = "letter")
     private Character letter;
 }

@@ -17,7 +17,7 @@ public class CarModel {
     @Id
     @GeneratedValue
     @Column(name = "model_id")
-    private Long modelId;
+    private Integer modelId;
     @Column(name = "model_name")
     private String name;
 }

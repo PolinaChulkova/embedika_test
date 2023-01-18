@@ -17,8 +17,8 @@ public class Region {
     @Id
     @GeneratedValue
     @Column(name = "region_id")
-    private Long regionId;
-    @Column(name = "region")
-    private String region;
+    private Short regionId;
+    @Column(name = "region_number")
+    private String regionNumber;
 
 }
