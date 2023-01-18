@@ -11,7 +11,6 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "cars")
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -22,14 +21,28 @@ public class Car {
     private Long carId;
     @Column(name = "car_number")
     private String carNumber;
-    @Column(name = "car_model")
-    private String carModel;
     @Column(name = "color")
     private String color;
     @Column(name = "year")
     private String year;
     @Column(name = "date_added")
-    private LocalDateTime dateAdded;
+    private LocalDateTime dateAdded = LocalDateTime.now();
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "region")
+    private Region region;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "car_model")
+    private CarModel carModel;
+
+    public Car(String carNumber, String color, String year, Region region, CarModel carModel) {
+        this.carNumber = carNumber;
+        this.color = color;
+        this.year = year;
+        this.region = region;
+        this.carModel = carModel;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -38,13 +51,15 @@ public class Car {
         Car car = (Car) o;
         return Objects.equals(carId, car.carId)
                 && Objects.equals(carNumber, car.carNumber)
-                && Objects.equals(carModel, car.carModel)
                 && Objects.equals(color, car.color)
-                && Objects.equals(year, car.year);
+                && Objects.equals(year, car.year)
+                && Objects.equals(dateAdded, car.dateAdded)
+                && Objects.equals(region, car.region)
+                && Objects.equals(carModel, car.carModel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(carId, carNumber, carModel, color, year);
+        return Objects.hash(carId, carNumber, color, year, dateAdded, region, carModel);
     }
 }

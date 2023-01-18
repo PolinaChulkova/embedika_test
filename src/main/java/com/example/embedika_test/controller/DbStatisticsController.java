@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/db/statistics")
 @RequiredArgsConstructor
-public class DBController {
+public class DbStatisticsController {
 
     private final DbStatisticsService dbStatisticsService;
 

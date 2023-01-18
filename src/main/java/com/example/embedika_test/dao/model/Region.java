@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "regions")
@@ -20,5 +21,8 @@ public class Region {
     private Short regionId;
     @Column(name = "region_number")
     private String regionNumber;
+
+    @OneToMany(cascade = CascadeType.MERGE)
+    private Set<Car> cars;
 
 }
