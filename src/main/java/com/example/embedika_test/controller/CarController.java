@@ -34,23 +34,23 @@ public class CarController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchCarsByText(@RequestParam(value = "carNumber") String carNumber,
-                                              @RequestParam(value = "regionNumber") String regionNumber,
-                                              @RequestParam(value = "sort", required = false) String sort,
-                                              @RequestParam(value = "order", required = false) String order,
-                                              @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-                                              @RequestParam(value = "size", required = false, defaultValue = "2") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(order).getDirection(), sort));
+    public ResponseEntity<?> searchCarsByCarNumberAndRegionNumber(@RequestParam(value = "carNumber", required = false) String carNumber,
+                                                                  @RequestParam(value = "regionNumber", required = false) String regionNumber,
+                                                                  @RequestParam(value = "sort", required = false, defaultValue = "dateAdded") String sort,
+                                                                  @RequestParam(value = "order", required = false, defaultValue = "DESC") String order,
+                                                                  @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+                                                                  @RequestParam(value = "size", required = false, defaultValue = "2") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(order), sort));
         return ResponseEntity.ok().body(carService.searchByCarNumberAndRegionNumber(carNumber, regionNumber, pageable));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> searchCarsByText(@RequestParam(value = "search") String search,
-                                              @RequestParam(value = "sort", required = false) String sort,
-                                              @RequestParam(value = "order", required = false) String order,
+                                              @RequestParam(value = "sort", required = false, defaultValue = "dateAdded") String sort,
+                                              @RequestParam(value = "order", required = false, defaultValue = "DESC") String order,
                                               @RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                               @RequestParam(value = "size", required = false, defaultValue = "2") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(order).getDirection(), sort));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(order), sort));
         return ResponseEntity.ok().body(carService.searchByText(search, pageable));
     }
 

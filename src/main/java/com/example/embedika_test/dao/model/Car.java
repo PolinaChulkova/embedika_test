@@ -1,6 +1,5 @@
 package com.example.embedika_test.dao.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +26,11 @@ public class Car {
     private String year;
     @Column(name = "amountOfOwners")
     private Byte amountOfOwners;
+    @Column(name = "mileage")
+    private Integer mileage;
+    @Column(name = "body_type")
+    @Enumerated(EnumType.STRING)
+    private AutoBodyType bodyType;
     @Column(name = "date_added")
     private LocalDateTime dateAdded = LocalDateTime.now();
 
@@ -38,10 +42,14 @@ public class Car {
     @JoinColumn(name = "car_model")
     private CarModel carModel;
 
-    public Car(String carNumber, String color, String year, Region region, CarModel carModel) {
+    public Car(String carNumber, String color, String year, Byte amountOfOwners,
+               Integer mileage, AutoBodyType bodyType, Region region, CarModel carModel) {
         this.carNumber = carNumber;
         this.color = color;
         this.year = year;
+        this.amountOfOwners = amountOfOwners;
+        this.mileage = mileage;
+        this.bodyType = bodyType;
         this.region = region;
         this.carModel = carModel;
     }
@@ -51,17 +59,15 @@ public class Car {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return Objects.equals(carId, car.carId)
-                && Objects.equals(carNumber, car.carNumber)
-                && Objects.equals(color, car.color)
-                && Objects.equals(year, car.year)
-                && Objects.equals(dateAdded, car.dateAdded)
-                && Objects.equals(region, car.region)
-                && Objects.equals(carModel, car.carModel);
+        return Objects.equals(carId, car.carId) && Objects.equals(carNumber, car.carNumber) &&
+                Objects.equals(color, car.color) && Objects.equals(year, car.year) &&
+                Objects.equals(amountOfOwners, car.amountOfOwners) &&
+                Objects.equals(mileage, car.mileage) && bodyType == car.bodyType &&
+                Objects.equals(dateAdded, car.dateAdded);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(carId, carNumber, color, year, dateAdded, region, carModel);
+        return Objects.hash(carId, carNumber, color, year, amountOfOwners, mileage, bodyType, dateAdded);
     }
 }

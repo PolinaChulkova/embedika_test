@@ -56,6 +56,9 @@ public class CarServiceImpl implements CarService {
                 carDto.getCarNumber(),
                 carDto.getColor(),
                 carDto.getYear(),
+                carDto.getAmountOfOwners(),
+                carDto.getMileage(),
+                carDto.getBodyType(),
 
                 regionRepository.findByRegionNumber(carDto.getRegionNumber()).orElseThrow(() ->
                         new EntityNotFoundException("Регион " + carDto.getRegionNumber() + " не найден!")),
