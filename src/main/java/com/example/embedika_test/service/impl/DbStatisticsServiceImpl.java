@@ -16,6 +16,8 @@ public class DbStatisticsServiceImpl implements DbStatisticsService {
 
     @Override
     public DbStatistics getDbStatistics(LocalDateTime data1, LocalDateTime data2) {
+        if (data2 == null) data2 = LocalDateTime.now();
+        if (data1 == null) data1 = data2.minusYears(1);
         return new DbStatistics(
                 dbStatisticsRepository.getCountOfRecords(),
                 dbStatisticsRepository.getDataFirstRecord(),

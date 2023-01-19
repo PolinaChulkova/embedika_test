@@ -18,14 +18,14 @@ public interface CarRepository extends PagingAndSortingRepository<Car, Long> {
     @Query(value = "select c from Car c where " +
             "lower(c.carModel.name) like ('%'||lower(trim(:text))||'%') or " +
             "lower(c.carMark.name) like ('%'||lower(trim(:text))||'%') or " +
-            "lower(c.color) like ('%'||lower(trim(:text))||'%') or " +
-            "lower(c.bodyType) like ('%'||lower(trim(:text))||'%')")
+            "c.color like ('%'||lower(trim(:text))||'%') or " +
+            "c.bodyType like ('%'||upper(trim(:text))||'%')")
     Page<Car> searchByText(@Param("text") String text, Pageable pageable);
 
     @Transactional
     @Query(value = "select c from Car c where " +
-            "(c.carNumber is null or c.carNumber = upper(trim(:carNumber))) and " +
-            "(c.region.regionNumber is null or c.region.regionNumber = trim(:regionNumber))")
+            "(:carNumber is null or c.carNumber = upper(trim(:carNumber))) and " +
+            "(:regionNumber is null or c.region.regionNumber = trim(:regionNumber))")
     Page<Car> searchByCarNumberAndRegionNumber(@Param("carNumber") String carNumber,
                                                @Param("regionNumber") String regionNumber,
                                                Pageable pageable);

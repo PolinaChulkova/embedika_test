@@ -1,5 +1,6 @@
 package com.example.embedika_test.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,12 +24,16 @@ public class CarModel {
     @Column(name = "model_name")
     private String name;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "car_mark")
+    @ManyToOne(cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "car_mark_id", referencedColumnName = "mark_id")
     private CarMark carMark;
 
-    @OneToMany(mappedBy = "carModel", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "carModel", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Set<Car> cars = new HashSet<>();
+
+    public CarModel(String name) {
+        this.name = name;
+    }
 
     public CarModel(String name, CarMark carMark) {
         this.name = name;

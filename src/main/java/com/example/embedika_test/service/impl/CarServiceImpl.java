@@ -3,10 +3,9 @@ package com.example.embedika_test.service.impl;
 
 import com.example.embedika_test.dao.dto.CarDto;
 import com.example.embedika_test.dao.model.Car;
-import com.example.embedika_test.dao.model.Region;
-import com.example.embedika_test.repository.CarModelRepository;
+import com.example.embedika_test.dao.model.CarMark;
+import com.example.embedika_test.dao.model.CarModel;
 import com.example.embedika_test.repository.CarRepository;
-import com.example.embedika_test.repository.RegionRepository;
 import com.example.embedika_test.service.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,8 +20,7 @@ import javax.persistence.EntityNotFoundException;
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
-    private final RegionRepository regionRepository;
-    private final CarModelRepository carModelRepository;
+    private final AdditionalInfoService additionalInfoService;
 
     @Override
     public Page<Car> getAllCars(Pageable pageable) {
@@ -47,29 +45,62 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car addCar(CarDto carDto) {
+        try {
+            if (carRepository.existsByCarNumberAndRegionNumber(carDto.getCarNumber(), carDto.getRegionNumber())) {
+                throw new EntityExistsException("Автомобиль с регистрационным знаком \""
+                        + carDto.getCarNumber() + carDto.getRegionNumber() + "\" уже существует!");
+            }
+            return carRepository.save(new Car(
+                    carDto.getCarNumber(),
+                    carDto.getColor(),
+                    carDto.getYear(),
+                    carDto.getAmountOfOwners(),
+                    carDto.getMileage(),
+                    carDto.getBodyType(),
+                    additionalInfoService.findRegionByRegionNumber(carDto.getRegionNumber()),
+                    additionalInfoService.findMarkByName(carDto.getCarMark()),
+                    additionalInfoService.findModelByName(carDto.getCarModelName())
 
-        if (carRepository.existsByCarNumberAndRegionNumber(carDto.getCarNumber(), carDto.getRegionNumber())) {
-            throw new EntityExistsException("Автомобиль с регистрационным знаком \""
-                    + carDto.getCarNumber() + carDto.getRegionNumber() + "\" уже существует!");
+            ));
+        } catch (RuntimeException e) {
+            throw new RuntimeException(String.format("Автомобиль \"%s\" не добавлен в справочник! Error: %s",
+                    carDto.getCarNumber(), e));
         }
-        return carRepository.save(new Car(
-                carDto.getCarNumber(),
-                carDto.getColor(),
-                carDto.getYear(),
-                carDto.getAmountOfOwners(),
-                carDto.getMileage(),
-                carDto.getBodyType(),
+    }
 
-                regionRepository.findByRegionNumber(carDto.getRegionNumber()).orElseThrow(() ->
-                        new EntityNotFoundException("Регион " + carDto.getRegionNumber() + " не найден!")),
+    @Override
+    public Car updateCar(Long carId, CarDto carDto) {
+        try {
+            Car car = findByCarId(carId);
+            CarMark carMark = additionalInfoService.findMarkByName(carDto.getCarMark());
+            CarModel carModel = additionalInfoService.findModelByName(carDto.getCarModelName());
 
-                carModelRepository.findByName(carDto.getCarModelName()).orElseThrow(() ->
-                        new EntityNotFoundException("Модель автомобиля \"" + carDto.getCarModelName() + "\" не найдена!"))
-        ));
+            car.setCarNumber(car.getCarNumber());
+            car.setColor(car.getColor());
+            car.setYear(carDto.getYear());
+            car.setAmountOfOwners(car.getAmountOfOwners());
+            car.setMileage(carDto.getMileage());
+            car.setBodyType(carDto.getBodyType());
+            car.setRegion(additionalInfoService.findRegionByRegionNumber(carDto.getRegionNumber()));
+            car.setCarMark(carMark);
+            car.setCarModel(carMark.getModels().contains(carModel) ? carModel : null);
+
+            return carRepository.save(car);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Ну удалось обновить автомобиль с id = %d! Error: %s", carId, e));
+        }
     }
 
     @Override
     public void deleteByCarId(Long carId) {
-        carRepository.deleteById(carId);
+        try {
+            if (!carRepository.existsById(carId))
+                throw new EntityNotFoundException("Автомобиль не найден!");
+
+            carRepository.deleteById(carId);
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException(String.format("Не удалось удалить автомобиль с id = %d! Error: %s", carId, e));
+        }
     }
 }

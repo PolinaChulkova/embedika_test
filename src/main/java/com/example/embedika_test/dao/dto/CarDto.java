@@ -15,6 +15,7 @@ public class CarDto {
     private Integer mileage;
     private CarBodyType bodyType;
     private final String regionNumber;
+    private final String carMark;
     private final String carModelName;
 
 }

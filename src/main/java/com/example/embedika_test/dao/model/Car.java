@@ -1,5 +1,7 @@
 package com.example.embedika_test.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "cars")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "carId")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -47,7 +50,7 @@ public class Car {
     private CarModel carModel;
 
     public Car(String carNumber, String color, String year, Byte amountOfOwners,
-               Integer mileage, CarBodyType bodyType, Region region, CarMark carMark) {
+               Integer mileage, CarBodyType bodyType, Region region, CarMark carMark, CarModel carModel) {
         this.carNumber = carNumber;
         this.color = color;
         this.year = year;
@@ -56,6 +59,7 @@ public class Car {
         this.bodyType = bodyType;
         this.region = region;
         this.carMark = carMark;
+        this.carModel = carModel;
     }
 
     @Override

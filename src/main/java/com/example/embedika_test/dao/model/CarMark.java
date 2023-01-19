@@ -1,5 +1,8 @@
 package com.example.embedika_test.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +14,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "car_mark")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "markId")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -22,14 +26,19 @@ public class CarMark {
     @Column(name = "mark_name")
     private String name;
 
-    @OneToMany(mappedBy = "carMark", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "carMark", cascade = {CascadeType.MERGE})
     private Set<Car> cars = new HashSet<>();
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "modelId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CarModel> models = new HashSet<>();
 
     public CarMark(String name) {
         this.name = name;
+    }
+
+    public CarMark(String name, Set<CarModel> models) {
+        this.name = name;
+        this.models = models;
     }
 
     @Override
