@@ -1,6 +1,6 @@
 package com.example.embedika_test.service.impl;
 
-import com.example.embedika_test.dao.dto.AllInfoForCarsDto;
+import com.example.embedika_test.dao.dto.InfoForCarsDto;
 import com.example.embedika_test.dao.dto.CarMarkDto;
 import com.example.embedika_test.dao.dto.CarModelsDto;
 import com.example.embedika_test.dao.model.CarBodyType;
@@ -10,6 +10,7 @@ import com.example.embedika_test.dao.model.Region;
 import com.example.embedika_test.repository.CarMarkRepository;
 import com.example.embedika_test.repository.CarModelRepository;
 import com.example.embedika_test.repository.RegionRepository;
+import com.example.embedika_test.service.InfoForCars;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,20 +22,22 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AdditionalInfoService {
+public class InfoForCarsImpl implements InfoForCars {
 
     private final CarModelRepository carModelRepository;
     private final RegionRepository carRegionRepository;
     private final CarMarkRepository carMarkRepository;
 
-    public AllInfoForCarsDto getAllInfoForCars() {
-        return new AllInfoForCarsDto(
+    @Override
+    public InfoForCarsDto getAllInfoForCars() {
+        return new InfoForCarsDto(
                 carMarkRepository.findAll(),
                 carRegionRepository.findAll(),
                 CarBodyType.values()
         );
     }
 
+    @Override
     public List<Region> addRegions(String[] regionsNumbers) {
         return Arrays.stream(regionsNumbers)
                 .map(Region::new)
@@ -42,6 +45,7 @@ public class AdditionalInfoService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public CarMark addCarMark(CarMarkDto carMarkDto) {
         CarMark carMark = carMarkRepository.save(new CarMark(carMarkDto.getName()));
         carMark.setModels(addCarModels(new CarModelsDto(
@@ -50,6 +54,7 @@ public class AdditionalInfoService {
         return carMarkRepository.save(carMark);
     }
 
+    @Override
     public Set<CarModel> addCarModels(CarModelsDto carModelsDto) {
         return Arrays.stream(carModelsDto.getCarModelsNames())
                 .filter(cm -> !carModelRepository.existsByName(cm))
@@ -58,34 +63,40 @@ public class AdditionalInfoService {
                 .collect(Collectors.toSet());
     }
 
+    @Override
     public List<CarModel> findCarModelsByMarkId(Integer carMarkId) {
         return carModelRepository.findAllByCarMarkId(carMarkId);
     }
 
+    @Override
     public CarMark findMarkById(Integer carMarkId) {
         return carMarkRepository.findById(carMarkId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Марка автомобиля не найдена!"));
     }
 
+    @Override
     public Region findRegionByRegionNumber(String regionNumber) {
         return carRegionRepository.findByRegionNumber(regionNumber)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Регион " + regionNumber + " не найден!"));
     }
 
+    @Override
     public CarMark findMarkByName(String name) {
         return carMarkRepository.findByName(name)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Марка автомобиля не найдена!"));
     }
 
+    @Override
     public CarModel findModelByName(String name) {
         return carModelRepository.findByName(name)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Модель автомобиля \"" + name + "\" не найдена!"));
     }
 
+    @Override
     public void deleteMarkById(Integer carMarkId) {
         try {
             if (!carModelRepository.existsById(carMarkId))
@@ -98,6 +109,7 @@ public class AdditionalInfoService {
         }
     }
 
+    @Override
     public void deleteModelById(Integer carModelId) {
         try {
             if (!carModelRepository.existsById(carModelId))
@@ -110,6 +122,7 @@ public class AdditionalInfoService {
         }
     }
 
+    @Override
     public void deleteRegionById(Short regionId) {
         try {
             if (!carRegionRepository.existsById(regionId))

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class AllInfoForCarsDto {
+public class InfoForCarsDto {
 
     private final List<CarMark> carMarks;
     private final List<Region> regions;

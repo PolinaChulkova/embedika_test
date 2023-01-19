@@ -7,6 +7,7 @@ import com.example.embedika_test.dao.model.CarMark;
 import com.example.embedika_test.dao.model.CarModel;
 import com.example.embedika_test.repository.CarRepository;
 import com.example.embedika_test.service.CarService;
+import com.example.embedika_test.service.InfoForCars;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ import javax.persistence.EntityNotFoundException;
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
-    private final AdditionalInfoService additionalInfoService;
+    private final InfoForCars infoForCars;
 
     @Override
     public Page<Car> getAllCars(Pageable pageable) {
@@ -57,9 +58,9 @@ public class CarServiceImpl implements CarService {
                     carDto.getAmountOfOwners(),
                     carDto.getMileage(),
                     carDto.getBodyType(),
-                    additionalInfoService.findRegionByRegionNumber(carDto.getRegionNumber()),
-                    additionalInfoService.findMarkByName(carDto.getCarMark()),
-                    additionalInfoService.findModelByName(carDto.getCarModelName())
+                    infoForCars.findRegionByRegionNumber(carDto.getRegionNumber()),
+                    infoForCars.findMarkByName(carDto.getCarMark()),
+                    infoForCars.findModelByName(carDto.getCarModelName())
 
             ));
         } catch (RuntimeException e) {
@@ -72,8 +73,8 @@ public class CarServiceImpl implements CarService {
     public Car updateCar(Long carId, CarDto carDto) {
         try {
             Car car = findByCarId(carId);
-            CarMark carMark = additionalInfoService.findMarkByName(carDto.getCarMark());
-            CarModel carModel = additionalInfoService.findModelByName(carDto.getCarModelName());
+            CarMark carMark = infoForCars.findMarkByName(carDto.getCarMark());
+            CarModel carModel = infoForCars.findModelByName(carDto.getCarModelName());
 
             car.setCarNumber(car.getCarNumber());
             car.setColor(car.getColor());
@@ -81,7 +82,7 @@ public class CarServiceImpl implements CarService {
             car.setAmountOfOwners(car.getAmountOfOwners());
             car.setMileage(carDto.getMileage());
             car.setBodyType(carDto.getBodyType());
-            car.setRegion(additionalInfoService.findRegionByRegionNumber(carDto.getRegionNumber()));
+            car.setRegion(infoForCars.findRegionByRegionNumber(carDto.getRegionNumber()));
             car.setCarMark(carMark);
             car.setCarModel(carMark.getModels().contains(carModel) ? carModel : null);
 
