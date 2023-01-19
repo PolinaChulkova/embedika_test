@@ -8,10 +8,11 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
-@Setter
 public class DbStatistics {
     private final Long countOfRecords;
     private final LocalDateTime dataFirstRecord;
     private final LocalDateTime dataLastRecord;
+
+    private final Long countOfRecordsPeriod;
 
 }

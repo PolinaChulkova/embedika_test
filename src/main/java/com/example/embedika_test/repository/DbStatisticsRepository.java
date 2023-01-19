@@ -13,6 +13,9 @@ public interface DbStatisticsRepository extends JpaRepository<Car, Long> {
     @Query(value = "SELECT COUNT(c.carId) FROM Car c")
     Long getCountOfRecords();
 
+    @Query(value = "select count(c.carId) from Car c where c.dateAdded between ?1 and ?2")
+    Long getCountOfRecordsPeriod(LocalDateTime data1, LocalDateTime data2);
+
     @Query(value = "SELECT MIN(c.dateAdded) FROM Car c")
     LocalDateTime getDataFirstRecord();
 

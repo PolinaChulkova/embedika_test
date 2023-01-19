@@ -1,13 +1,11 @@
 package com.example.embedika_test.dao.dto;
 
-import com.example.embedika_test.dao.model.AutoBodyType;
+import com.example.embedika_test.dao.model.CarBodyType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
-@Setter
 public class CarDto {
 
     private final String carNumber;
@@ -15,7 +13,7 @@ public class CarDto {
     private final String year;
     private final Byte amountOfOwners;
     private Integer mileage;
-    private AutoBodyType bodyType;
+    private CarBodyType bodyType;
     private final String regionNumber;
     private final String carModelName;
 

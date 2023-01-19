@@ -30,7 +30,7 @@ public class Car {
     private Integer mileage;
     @Column(name = "body_type")
     @Enumerated(EnumType.STRING)
-    private AutoBodyType bodyType;
+    private CarBodyType bodyType;
     @Column(name = "date_added")
     private LocalDateTime dateAdded = LocalDateTime.now();
 
@@ -39,11 +39,15 @@ public class Car {
     private Region region;
 
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "car_mark")
+    private CarMark carMark;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "car_model")
     private CarModel carModel;
 
     public Car(String carNumber, String color, String year, Byte amountOfOwners,
-               Integer mileage, AutoBodyType bodyType, Region region, CarModel carModel) {
+               Integer mileage, CarBodyType bodyType, Region region, CarMark carMark) {
         this.carNumber = carNumber;
         this.color = color;
         this.year = year;
@@ -51,7 +55,7 @@ public class Car {
         this.mileage = mileage;
         this.bodyType = bodyType;
         this.region = region;
-        this.carModel = carModel;
+        this.carMark = carMark;
     }
 
     @Override

@@ -16,9 +16,10 @@ public interface CarRepository extends PagingAndSortingRepository<Car, Long> {
 
     @Transactional
     @Query(value = "select c from Car c where " +
-            "lower(c.carModel.name) like ('%'||lower(trim(?))||'%') or " +
-            "lower(c.color) like ('%'||lower(trim(?))||'%') or " +
-            "lower(c.bodyType) like ('%'||lower(trim(?))||'%')")
+            "lower(c.carModel.name) like ('%'||lower(trim(:text))||'%') or " +
+            "lower(c.carMark.name) like ('%'||lower(trim(:text))||'%') or " +
+            "lower(c.color) like ('%'||lower(trim(:text))||'%') or " +
+            "lower(c.bodyType) like ('%'||lower(trim(:text))||'%')")
     Page<Car> searchByText(@Param("text") String text, Pageable pageable);
 
     @Transactional
@@ -35,16 +36,4 @@ public interface CarRepository extends PagingAndSortingRepository<Car, Long> {
     boolean existsByCarNumberAndRegionNumber(String carNumber, String regionNumber);
 
     Page<Car> findAll(Pageable pageable);
-
-    @Override
-    Optional<Car> findById(Long aLong);
-
-    @Override
-    boolean existsById(Long aLong);
-
-    @Override
-    void deleteById(Long aLong);
-
-    @Override
-    <S extends Car> S save(S entity);
 }

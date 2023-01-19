@@ -10,8 +10,5 @@ import java.util.Optional;
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Short> {
 
-    @Override
-    List<Region> findAll();
-
     Optional<Region> findByRegionNumber(String regionNumber);
 }

@@ -6,6 +6,8 @@ import com.example.embedika_test.service.DbStatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class DbStatisticsServiceImpl implements DbStatisticsService {
@@ -13,11 +15,12 @@ public class DbStatisticsServiceImpl implements DbStatisticsService {
     private  final DbStatisticsRepository dbStatisticsRepository;
 
     @Override
-    public DbStatistics getDbStatistics() {
+    public DbStatistics getDbStatistics(LocalDateTime data1, LocalDateTime data2) {
         return new DbStatistics(
                 dbStatisticsRepository.getCountOfRecords(),
                 dbStatisticsRepository.getDataFirstRecord(),
-                dbStatisticsRepository.getDataLastRecord()
+                dbStatisticsRepository.getDataLastRecord(),
+                dbStatisticsRepository.getCountOfRecordsPeriod(data1, data2)
         );
     }
 }
