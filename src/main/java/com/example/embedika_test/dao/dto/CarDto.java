@@ -3,9 +3,11 @@ package com.example.embedika_test.dao.dto;
 import com.example.embedika_test.dao.model.CarBodyType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 @AllArgsConstructor
 @Getter
+@ToString
 public class CarDto {
 
     private final String carNumber;

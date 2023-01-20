@@ -49,7 +49,6 @@ public interface CarRepository extends PagingAndSortingRepository<Car, Long> {
     Optional<Car> findById(Long carId);
 
     @Override
-    @Cacheable(value = "cars")
     boolean existsById(Long carId);
 
     @Override

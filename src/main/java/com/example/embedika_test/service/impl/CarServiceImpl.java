@@ -27,6 +27,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Page<Car> getAllCars(Pageable pageable) {
+        log.info("Получение всех автомобилей");
         return carRepository.findAll(pageable);
     }
 
@@ -39,16 +40,19 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Page<Car> searchByText(String text, Pageable pageable) {
+        log.info("Поиск автомобилей по тексту: {}", text);
         return carRepository.searchByText(text, pageable);
     }
 
     @Override
     public Page<Car> searchByCarNumberAndRegionNumber(String carNumber, String regionNumber, Pageable pageable) {
+        log.info("Поиск автомобилей по номеру {} и номеру региона: {}", carNumber, regionNumber);
         return carRepository.searchByCarNumberAndRegionNumber(carNumber, regionNumber, pageable);
     }
 
     @Override
     public Car addCar(CarDto carDto) {
+        log.info("Создание автомобиля {}", carDto);
         try {
             if (carRepository.existsByCarNumberAndRegionNumber(carDto.getCarNumber(), carDto.getRegionNumber())) {
                 throw new EntityExistsException("Автомобиль с регистрационным знаком \""
@@ -74,6 +78,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car updateCar(Long carId, CarDto carDto) {
+        log.info("Создание автомобиля {} с id = {}", carDto, carId);
         try {
             Car car = findByCarId(carId);
             CarMark carMark = infoForCars.findMarkByName(carDto.getCarMark());
@@ -97,6 +102,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void deleteByCarId(Long carId) {
+        log.info("Удаление автомобиля c id = {}", carId);
         try {
             if (!carRepository.existsById(carId))
                 throw new EntityNotFoundException("Автомобиль не найден!");
