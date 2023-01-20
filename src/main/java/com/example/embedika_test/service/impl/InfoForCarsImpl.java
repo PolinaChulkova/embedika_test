@@ -1,8 +1,8 @@
 package com.example.embedika_test.service.impl;
 
-import com.example.embedika_test.dao.dto.InfoForCarsDto;
 import com.example.embedika_test.dao.dto.CarMarkDto;
 import com.example.embedika_test.dao.dto.CarModelsDto;
+import com.example.embedika_test.dao.dto.InfoForCarsDto;
 import com.example.embedika_test.dao.model.CarBodyType;
 import com.example.embedika_test.dao.model.CarMark;
 import com.example.embedika_test.dao.model.CarModel;
@@ -47,20 +47,32 @@ public class InfoForCarsImpl implements InfoForCars {
 
     @Override
     public CarMark addCarMark(CarMarkDto carMarkDto) {
-        CarMark carMark = carMarkRepository.save(new CarMark(carMarkDto.getName()));
-        carMark.setModels(addCarModels(new CarModelsDto(
-                carMark.getMarkId(),
-                carMarkDto.getCarModelsNames())));
-        return carMarkRepository.save(carMark);
+        try {
+            CarMark carMark = carMarkRepository.save(new CarMark(carMarkDto.getName()));
+            carMark.setModels(addCarModels(new CarModelsDto(
+                    carMark.getMarkId(),
+                    carMarkDto.getCarModelsNames())));
+            return carMarkRepository.save(carMark);
+
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Не удалось добавить модель автомобиля \"%s\"! Error: %s)",
+                    carMarkDto.getName(), e));
+        }
     }
 
     @Override
     public Set<CarModel> addCarModels(CarModelsDto carModelsDto) {
-        return Arrays.stream(carModelsDto.getCarModelsNames())
-                .filter(cm -> !carModelRepository.existsByName(cm))
-                .map(cm -> new CarModel(cm, findMarkById(carModelsDto.getCarMarkId())))
-                .map(carModelRepository::save)
-                .collect(Collectors.toSet());
+        try {
+            return Arrays.stream(carModelsDto.getCarModelsNames())
+                    .filter(cm -> !carModelRepository.existsByName(cm))
+                    .map(cm -> new CarModel(cm, findMarkById(carModelsDto.getCarMarkId())))
+                    .map(carModelRepository::save)
+                    .collect(Collectors.toSet());
+
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Не удалось добавить модели автомобилей %s! Error: %s",
+                    Arrays.toString(carModelsDto.getCarModelsNames()), e));
+        }
     }
 
     @Override
