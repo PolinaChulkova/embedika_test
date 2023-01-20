@@ -41,7 +41,7 @@ public class InfoForCarsController {
     }
 
     @DeleteMapping("/region/{regionId}")
-    public ResponseEntity<?> deleteRegion(@PathVariable Short regionId) {
+    public ResponseEntity<?> deleteRegion(@PathVariable Integer regionId) {
         infoForCars.deleteRegionById(regionId);
         return ResponseEntity.ok().body(HttpStatus.OK.toString());
     }

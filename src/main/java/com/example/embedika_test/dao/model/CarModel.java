@@ -1,5 +1,6 @@
 package com.example.embedika_test.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,19 +12,20 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "car_model")
+@Table(name = "car_models")
 @NoArgsConstructor
 @Getter
 @Setter
 public class CarModel {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "model_id")
     private Integer modelId;
     @Column(name = "model_name")
     private String name;
 
+    @JsonManagedReference
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "car_mark_id", referencedColumnName = "mark_id")
     private CarMark carMark;

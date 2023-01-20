@@ -34,5 +34,5 @@ public interface InfoForCars {
 
     void deleteModelById(Integer carModelId);
 
-    void deleteRegionById(Short regionId);
+    void deleteRegionById(Integer regionId);
 }

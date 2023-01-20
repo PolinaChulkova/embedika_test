@@ -1,6 +1,6 @@
 package com.example.embedika_test.dao.model;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,17 +15,18 @@ import java.util.Set;
 @Setter
 public class Region {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "region_id")
-    private Short regionId;
-    @Column(name = "region_number")
+    private Integer regionId;
+    @Column(name = "region_number", unique = true)
     private String regionNumber;
 
     public Region(String regionNumber) {
         this.regionNumber = regionNumber;
     }
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @JsonBackReference
+    @OneToMany(mappedBy = "carId", cascade = CascadeType.MERGE)
     private Set<Car> cars;
 
 }

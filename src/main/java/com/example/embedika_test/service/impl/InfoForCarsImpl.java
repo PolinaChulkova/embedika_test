@@ -135,7 +135,7 @@ public class InfoForCarsImpl implements InfoForCars {
     }
 
     @Override
-    public void deleteRegionById(Short regionId) {
+    public void deleteRegionById(Integer regionId) {
         try {
             if (!carRegionRepository.existsById(regionId))
                 throw new EntityNotFoundException("Регион с id = " + regionId + " не найден!");
