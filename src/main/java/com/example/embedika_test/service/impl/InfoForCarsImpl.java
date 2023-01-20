@@ -111,10 +111,10 @@ public class InfoForCarsImpl implements InfoForCars {
     @Override
     public void deleteMarkById(Integer carMarkId) {
         try {
-            if (!carModelRepository.existsById(carMarkId))
+            if (!carMarkRepository.existsById(carMarkId))
                 throw new EntityNotFoundException("Марка автомобиля с id = " + carMarkId + " не найдена!");
 
-            carModelRepository.deleteById(carMarkId);
+            carMarkRepository.deleteById(carMarkId);
 
         } catch (RuntimeException e) {
             throw new RuntimeException("Не удалось удалить марку автомобилей с id = " + carMarkId + "!");

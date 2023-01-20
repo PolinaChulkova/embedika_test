@@ -1,6 +1,9 @@
 package com.example.embedika_test.repository;
 
 import com.example.embedika_test.dao.model.Car;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -36,4 +39,20 @@ public interface CarRepository extends PagingAndSortingRepository<Car, Long> {
     boolean existsByCarNumberAndRegionNumber(String carNumber, String regionNumber);
 
     Page<Car> findAll(Pageable pageable);
+
+    @Override
+    @CachePut(value = "cars")
+    <S extends Car> S save(S car);
+
+    @Override
+    @Cacheable(value = "cars")
+    Optional<Car> findById(Long carId);
+
+    @Override
+    @Cacheable(value = "cars")
+    boolean existsById(Long carId);
+
+    @Override
+    @CacheEvict(value = "cars")
+    void deleteById(Long carId);
 }
